@@ -4,7 +4,7 @@ import { cookies } from "next/headers";
 import { createIdentityDb } from "@/db/identity/client";
 import { sessions, users } from "@/db/identity/schema";
 
-export const SESSION_COOKIE_NAME = "like_tac_session";
+export const SESSION_COOKIE_NAME = "next_level_cast_session";
 export const SESSION_MAX_AGE_SECONDS = 60 * 60 * 24 * 14;
 
 export function createOpaqueToken(): string {
@@ -28,7 +28,7 @@ export function sessionCookie(value: string, secure = process.env.NODE_ENV === "
 }
 
 export async function getSessionFromToken(token?: string) {
-  if (!token) return null;
+  if (!token || !process.env.IDENTITY_DATABASE_URL) return null;
   const db = createIdentityDb();
   const [record] = await db.select({ sessionId: sessions.id, userId: users.id, username: users.username, email: users.email, role: users.role, status: users.status, mustChangePassword: users.mustChangePassword }).from(sessions).innerJoin(users, eq(users.id, sessions.userId)).where(and(eq(sessions.tokenHash, hashOpaqueToken(token)), gt(sessions.expiresAt, new Date()), isNull(sessions.revokedAt), eq(users.status, "active"), isNull(users.deletedAt))).limit(1);
   return record ?? null;

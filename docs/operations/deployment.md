@@ -1,15 +1,15 @@
-# Like TAC deployment runbook
+# Next Level Cast deployment runbook
 
 ## Production resources
 
-- GitHub: `jjanson123Java/liketac_podcast`
-- Vercel team/project: `like-tac/liketac-podcast`
+- GitHub: `jjanson123Java/nextlevelcast_podcast`
+- Vercel team/project: `like-tac/nextlevelcast-podcast`
 - Vercel project ID: `prj_OoDepa84M97laJA0l0A9jQySeUM6`
 - Identity Neon resource: `like-tac-identity` (`store_lqrpszFQ4uUSEPSZ`)
 - Content Neon resource: `like-tac-content` (`store_fPx07Ue7n7DUQrZN`)
 - Private Blob store: `like-tac-podcasts` (`store_6PItXXoc1Tq5dInZ`)
 - Transactional email resource: `like-tac-email` (`ir_n9QQYFafyCcU8zmg`)
-- Canonical domain: `liketac.live`; `www.liketac.live` redirects to the canonical host
+- Canonical domain: `nextlevelcast.live`; `www.nextlevelcast.live` redirects to the canonical host
 
 Only resource names and IDs belong in source control. Secrets remain in Vercel environment variables.
 
@@ -26,7 +26,7 @@ Runtime requires `IDENTITY_DATABASE_URL`, `CONTENT_DATABASE_URL`, `BLOB_READ_WRI
 5. Run the idempotent administrator bootstrap and content seed scripts.
 6. Deploy a preview and verify visitor, subscriber, administrator, media, Help, mobile, and theme journeys.
 7. Stage a production deployment without assigning domains, repeat smoke tests, then promote that exact deployment.
-8. Verify `liketac.live`, `www` redirect, DNS, TLS, and recent Vercel error logs.
+8. Verify `nextlevelcast.live`, `www` redirect, DNS, TLS, and recent Vercel error logs.
 
 ## Database commands
 

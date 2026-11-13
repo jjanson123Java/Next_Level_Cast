@@ -4,7 +4,7 @@ import { describe, expect, test, vi } from "vitest";
 import { EpisodeCard } from "./episode-card";
 
 describe("EpisodeCard", () => {
-  test("shows the approved opener on Browse Shows when the episode recording is not uploaded", () => {
+  test("shows branded artwork when the episode recording is not uploaded", () => {
     const { container } = render(
       <EpisodeCard
         episode={{
@@ -21,13 +21,8 @@ describe("EpisodeCard", () => {
       />,
     );
 
-    expect(container.querySelector("video")).toHaveAttribute(
-      "src",
-      "/media/podcast-opener/like-tac-podcast-opener.mp4",
-    );
-    expect(screen.getByLabelText("AI: useful coworker or confident liar? opening reel placeholder")).toBeVisible();
-    expect(container.querySelector("video")).not.toHaveAttribute("controls");
-    expect(screen.getByRole("button", { name: "Unmute preview" })).toBeVisible();
+    expect(container.querySelector("video")).toBeNull();
+    expect(screen.getByAltText("AI: useful coworker or confident liar? artwork")).toHaveAttribute("src", "/brand/next-level-cast-cover.png");
   });
 
   test("uses the approved catalog media route when a podcast preview exists", () => {

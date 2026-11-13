@@ -2,11 +2,11 @@ import { describe, expect, test, vi } from "vitest";
 import { CompanionApplication } from "../src/main/application";
 import { CompanionController } from "../src/main/companion-controller";
 
-describe("Like TAC Companion control flow", () => {
+describe("Next Level Cast Companion control flow", () => {
   test("connects, switches scenes, records, stops, and reconnects without restarting recording", async () => {
     let snapshot = {
       recording: false, streaming: false, availableScenes: ["00 - Standby", "10 - Host Only"] as const,
-      obsVersion: "33.0.0", profile: "LikeTACLive", sceneCollection: "LikeTACLive Studio", programScene: "00 - Standby",
+      obsVersion: "33.0.0", profile: "NextLevelCastLive", sceneCollection: "NextLevelCastLive Studio", programScene: "00 - Standby",
     };
     const client = {
       connect: vi.fn(async () => undefined),

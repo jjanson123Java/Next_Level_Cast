@@ -104,7 +104,7 @@ export class OBSClient {
         continue;
       }
       if (!(sourceScenes.get(source.name)?.length)) {
-        checks.push({ id: `source:${source.name}`, label: source.label, ready: false, reason: "OBS source is not enabled in an approved Like TAC scene." });
+        checks.push({ id: `source:${source.name}`, label: source.label, ready: false, reason: "OBS source is not enabled in an approved Next Level Cast scene." });
         continue;
       }
       try {
@@ -165,7 +165,7 @@ export class OBSClient {
   }
 
   async setProgramScene(scene: string) {
-    if (!APPROVED_SCENES.includes(scene as ApprovedScene)) throw new Error(`${scene} is not an approved Like TAC scene.`);
+    if (!APPROVED_SCENES.includes(scene as ApprovedScene)) throw new Error(`${scene} is not an approved Next Level Cast scene.`);
     await this.transport.call("SetCurrentProgramScene", { sceneName: scene });
   }
 

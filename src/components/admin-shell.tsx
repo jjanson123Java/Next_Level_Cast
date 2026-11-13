@@ -13,7 +13,7 @@ export function AdminShell({ current, children }: { current: string; children: R
   return (
     <div className="adminWorkspace">
       <aside className="adminSidebar">
-        <Link href="/admin" className="studioBrand" aria-label="Like TAC administration home">
+        <Link href="/admin" className="studioBrand" aria-label="Next Level Cast administration home">
           <span>LIKE TAC<span className="brandSlash">/</span></span>
           <small>THE CONTROL ROOM</small>
         </Link>

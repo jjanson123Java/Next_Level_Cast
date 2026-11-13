@@ -11,7 +11,7 @@ describe("subscriber sessions", () => {
 
   it("uses a secure HTTP-only same-site cookie", () => {
     expect(sessionCookie("token", true)).toMatchObject({
-      name: "like_tac_session",
+      name: "next_level_cast_session",
       value: "token",
       httpOnly: true,
       secure: true,

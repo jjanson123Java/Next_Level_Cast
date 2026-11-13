@@ -6,7 +6,7 @@ describe("CompanionController", () => {
     let releaseReadiness!: (value: any[]) => void;
     const readiness = new Promise<any[]>((resolve) => { releaseReadiness = resolve; });
     const client = {
-      getSnapshot: vi.fn(async () => ({ recording: true, streaming: false, availableScenes: ["10 - Host Only"], obsVersion: "33", profile: "LikeTACLive", sceneCollection: "LikeTACLive Studio", programScene: "10 - Host Only" })),
+      getSnapshot: vi.fn(async () => ({ recording: true, streaming: false, availableScenes: ["10 - Host Only"], obsVersion: "33", profile: "NextLevelCastLive", sceneCollection: "NextLevelCastLive Studio", programScene: "10 - Host Only" })),
       getReadiness: vi.fn(() => readiness),
     };
     const controller = new CompanionController(client as any);
@@ -21,7 +21,7 @@ describe("CompanionController", () => {
 
   test("synchronizes scene and recording state from a lightweight OBS snapshot", async () => {
     const client = {
-      getSnapshot: vi.fn(async () => ({ recording: true, streaming: false, availableScenes: ["50 - Host Presentation"], obsVersion: "33", profile: "LikeTACLive", sceneCollection: "LikeTACLive Studio", programScene: "50 - Host Presentation" })),
+      getSnapshot: vi.fn(async () => ({ recording: true, streaming: false, availableScenes: ["50 - Host Presentation"], obsVersion: "33", profile: "NextLevelCastLive", sceneCollection: "NextLevelCastLive Studio", programScene: "50 - Host Presentation" })),
       getReadiness: vi.fn(),
     };
     const controller = new CompanionController(client as any);
@@ -36,7 +36,7 @@ describe("CompanionController", () => {
     let releaseReadiness!: (value: any[]) => void;
     const readiness = new Promise<any[]>((resolve) => { releaseReadiness = resolve; });
     const client = {
-      getSnapshot: vi.fn(async () => ({ recording: false, streaming: false, availableScenes: ["10 - Host Only"], obsVersion: "33", profile: "LikeTACLive", sceneCollection: "LikeTACLive Studio", programScene: "10 - Host Only" })),
+      getSnapshot: vi.fn(async () => ({ recording: false, streaming: false, availableScenes: ["10 - Host Only"], obsVersion: "33", profile: "NextLevelCastLive", sceneCollection: "NextLevelCastLive Studio", programScene: "10 - Host Only" })),
       getReadiness: vi.fn(() => readiness),
     };
     const controller = new CompanionController(client as any);
@@ -54,7 +54,7 @@ describe("CompanionController", () => {
   test("publishes live OBS source readiness after connecting", async () => {
     const client = {
       connect: vi.fn(async () => undefined),
-      getSnapshot: vi.fn(async () => ({ recording: false, streaming: false, availableScenes: ["00 - Standby"], obsVersion: "33", profile: "LikeTACLive", sceneCollection: "LikeTACLive Studio", programScene: "00 - Standby" })),
+      getSnapshot: vi.fn(async () => ({ recording: false, streaming: false, availableScenes: ["00 - Standby"], obsVersion: "33", profile: "NextLevelCastLive", sceneCollection: "NextLevelCastLive Studio", programScene: "00 - Standby" })),
       getReadiness: vi.fn(async () => [{ id: "mic", label: "LCS host microphone", ready: true, reason: null }]),
       startRecord: vi.fn(), stopRecord: vi.fn(), setProgramScene: vi.fn(), subscribe: vi.fn(),
     };
@@ -73,7 +73,7 @@ describe("CompanionController", () => {
   test("refuses recording when a required source is not ready", async () => {
     const client = {
       connect: vi.fn(),
-      getSnapshot: vi.fn(async () => ({ recording: false, streaming: false, availableScenes: [], obsVersion: "33", profile: "LikeTACLive", sceneCollection: "LikeTACLive Studio", programScene: "00 - Standby" })),
+      getSnapshot: vi.fn(async () => ({ recording: false, streaming: false, availableScenes: [], obsVersion: "33", profile: "NextLevelCastLive", sceneCollection: "NextLevelCastLive Studio", programScene: "00 - Standby" })),
       getReadiness: vi.fn(async () => [{ id: "display", label: "Presentation display", ready: false, reason: "Required OBS source is missing." }]),
       startRecord: vi.fn(), stopRecord: vi.fn(), setProgramScene: vi.fn(), subscribe: vi.fn(),
     };
@@ -89,7 +89,7 @@ describe("CompanionController", () => {
       .mockResolvedValueOnce([{ id: "mic", label: "Microphone", ready: false, reason: "No live microphone level was detected." }]);
     const client = {
       connect: vi.fn(), getReadiness,
-      getSnapshot: vi.fn(async () => ({ recording: false, streaming: false, availableScenes: [], obsVersion: "33", profile: "LikeTACLive", sceneCollection: "LikeTACLive Studio", programScene: "00 - Standby" })),
+      getSnapshot: vi.fn(async () => ({ recording: false, streaming: false, availableScenes: [], obsVersion: "33", profile: "NextLevelCastLive", sceneCollection: "NextLevelCastLive Studio", programScene: "00 - Standby" })),
       startRecord: vi.fn(), stopRecord: vi.fn(), setProgramScene: vi.fn(), subscribe: vi.fn(),
     };
     const controller = new CompanionController(client as any);
@@ -103,7 +103,7 @@ describe("CompanionController", () => {
     const client = {
       connect: vi.fn(async () => undefined),
       disconnect: vi.fn(async () => undefined),
-      getSnapshot: vi.fn(async () => ({ recording: true, streaming: false, availableScenes: [], obsVersion: "33", profile: "LikeTACLive", sceneCollection: "LikeTACLive Studio", programScene: "10 - Host Only" })),
+      getSnapshot: vi.fn(async () => ({ recording: true, streaming: false, availableScenes: [], obsVersion: "33", profile: "NextLevelCastLive", sceneCollection: "NextLevelCastLive Studio", programScene: "10 - Host Only" })),
       getReadiness: vi.fn(async () => []),
       startRecord: vi.fn(async () => undefined),
       stopRecord: vi.fn(async () => undefined),
@@ -139,7 +139,7 @@ describe("CompanionController", () => {
   test("preserves completed readiness when stopping a recording", async () => {
     const client = {
       connect: vi.fn(async () => undefined),
-      getSnapshot: vi.fn(async () => ({ recording: false, streaming: false, availableScenes: ["10 - Host Only"], obsVersion: "33", profile: "LikeTACLive", sceneCollection: "LikeTACLive Studio", programScene: "10 - Host Only" })),
+      getSnapshot: vi.fn(async () => ({ recording: false, streaming: false, availableScenes: ["10 - Host Only"], obsVersion: "33", profile: "NextLevelCastLive", sceneCollection: "NextLevelCastLive Studio", programScene: "10 - Host Only" })),
       getReadiness: vi.fn(async () => [{ id: "mic", label: "Microphone", ready: true, reason: null }]),
       stopRecord: vi.fn(async () => undefined),
     };

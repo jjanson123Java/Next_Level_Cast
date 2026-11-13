@@ -7,7 +7,7 @@ import { AssetReadinessService } from "./asset-readiness";
 const directories: string[] = [];
 afterEach(async () => Promise.all(directories.splice(0).map((path) => rm(path, { recursive: true, force: true }))));
 
-async function fixture(content = "Like TAC original asset") {
+async function fixture(content = "Next Level Cast original asset") {
   const directory = await mkdtemp(join(tmpdir(), "like-tac-asset-"));
   directories.push(directory);
   const path = join(directory, "asset.bin");
@@ -27,9 +27,9 @@ describe("AssetReadinessService", () => {
   test("repairs an OBS asset path only after explicit confirmation", async () => {
     const update = vi.fn(async () => undefined);
     const service = new AssetReadinessService();
-    await expect(service.repairSourcePath({ confirmed: false, sourceName: "MEDIA_Standby_Loop", assetPath: "C:\\LikeTAC\\opener.mp4", update }))
+    await expect(service.repairSourcePath({ confirmed: false, sourceName: "MEDIA_Standby_Loop", assetPath: "C:\\NextLevelCast\\opener.mp4", update }))
       .rejects.toThrow("Administrator confirmation is required");
-    await service.repairSourcePath({ confirmed: true, sourceName: "MEDIA_Standby_Loop", assetPath: "C:\\LikeTAC\\opener.mp4", update });
-    expect(update).toHaveBeenCalledWith("MEDIA_Standby_Loop", "C:\\LikeTAC\\opener.mp4");
+    await service.repairSourcePath({ confirmed: true, sourceName: "MEDIA_Standby_Loop", assetPath: "C:\\NextLevelCast\\opener.mp4", update });
+    expect(update).toHaveBeenCalledWith("MEDIA_Standby_Loop", "C:\\NextLevelCast\\opener.mp4");
   });
 });

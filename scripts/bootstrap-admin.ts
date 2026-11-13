@@ -12,7 +12,7 @@ const db = createIdentityDb();
 const [existing] = await db.select().from(users).where(eq(users.username, username)).limit(1);
 if (!existing) {
   const passwordHash = await hashPassword(bootstrapPassword);
-  const [admin] = await db.insert(users).values({ username, email: securityEmail, passwordHash, firstName: "Like TAC", lastName: "Administrator", role: "admin", status: "active", mustChangePassword: true }).returning({ id: users.id });
+  const [admin] = await db.insert(users).values({ username, email: securityEmail, passwordHash, firstName: "Next Level Cast", lastName: "Administrator", role: "admin", status: "active", mustChangePassword: true }).returning({ id: users.id });
   await db.insert(passwordHistory).values({ userId: admin.id, passwordHash, position: 1 });
   await db.insert(adminProfiles).values({ userId: admin.id, securityEmail });
   console.log("Administrator account created with forced password replacement enabled.");

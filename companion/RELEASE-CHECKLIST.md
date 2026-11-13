@@ -1,4 +1,4 @@
-# Like TAC Companion release checklist
+# Next Level Cast Companion release checklist
 
 The phase-one installer is unsigned. Windows may display an Unknown Publisher warning until a trusted code-signing certificate is configured.
 
@@ -13,14 +13,14 @@ The phase-one installer is unsigned. Windows may display an Unknown Publisher wa
 ## Installation and protocol
 
 - [ ] Install on the administrator's Windows recording computer.
-- [ ] Confirm **Like TAC Companion** appears in Installed Apps.
-- [ ] From Win+R, run `liketac://recording` and confirm only one Companion window opens.
-- [ ] From Admin Dashboard → Recording Studio, confirm **Launch Like TAC Companion** opens the same application.
-- [ ] Confirm malformed or additional `liketac://` actions do not navigate or execute.
+- [ ] Confirm **Next Level Cast Companion** appears in Installed Apps.
+- [ ] From Win+R, run `nextlevelcast://recording` and confirm only one Companion window opens.
+- [ ] From Admin Dashboard → Recording Studio, confirm **Launch Next Level Cast Companion** opens the same application.
+- [ ] Confirm malformed or additional `nextlevelcast://` actions do not navigate or execute.
 
 ## Real OBS 33 acceptance
 
-- [ ] With OBS closed, select **Launch OBS** and confirm OBS opens with profile `LikeTACLive`, scene collection `LikeTACLive Studio`, and scene `00 - Standby`.
+- [ ] With OBS closed, select **Launch OBS** and confirm OBS opens with profile `NextLevelCastLive`, scene collection `NextLevelCastLive Studio`, and scene `00 - Standby`.
 - [ ] Confirm Companion connects only to `127.0.0.1:4455` with authentication.
 - [ ] Restart Companion and confirm Windows-encrypted credential storage works without exposing the password in logs or UI.
 - [ ] Confirm all four approved scenes display and unavailable scenes are disabled.
@@ -35,7 +35,7 @@ The phase-one installer is unsigned. Windows may display an Unknown Publisher wa
 
 - [ ] Confirm no router forwarding or public Windows Firewall rule exposes port 4455.
 - [ ] Confirm the Vercel website never receives the OBS password or local device inventory.
-- [ ] Uninstall Companion and confirm the `liketac` protocol registration and installed application are removed.
+- [ ] Uninstall Companion and confirm the `nextlevelcast` protocol registration and installed application are removed.
 - [ ] Confirm OBS profiles, scenes, and recordings remain untouched after uninstall.
 
 ## Automatic episode preview

@@ -8,8 +8,8 @@ import type { CompanionWindowAPI } from "../shared/window-api";
 const baseStatus = {
   connection: "connected" as const,
   obsVersion: "33.0.0",
-  profile: "LikeTACLive",
-  sceneCollection: "LikeTACLive Studio",
+  profile: "NextLevelCastLive",
+  sceneCollection: "NextLevelCastLive Studio",
   programScene: "00 - Standby",
   recording: false,
   recordingStartedAt: null,
@@ -18,7 +18,7 @@ const baseStatus = {
 
 beforeEach(() => { document.body.innerHTML = '<main id="app"></main>'; });
 
-describe("Like TAC Companion workspace", () => {
+describe("Next Level Cast Companion workspace", () => {
   test("guides OBS launch while disconnected and never displays a supplied secret", () => {
     renderCompanion(document.querySelector("#app")!, { ...baseStatus, connection: "disconnected" }, new Date());
     expect(screen.getByRole("button", { name: "Launch OBS" })).toBeVisible();
@@ -49,7 +49,7 @@ describe("Like TAC Companion workspace", () => {
       profile: "Untitled",
       readiness: [{ id: "deskpro", label: "Cisco DeskPro Camera", ready: false, reason: "Not connected in Windows." }],
     }, new Date());
-    expect(screen.getByText(/Required profile: LikeTACLive/)).toBeVisible();
+    expect(screen.getByText(/Required profile: NextLevelCastLive/)).toBeVisible();
     expect(screen.getByText("Not connected in Windows.")).toBeVisible();
     expect(screen.getByRole("button", { name: "Start Live Recording" })).toBeDisabled();
   });
@@ -63,10 +63,10 @@ describe("Like TAC Companion workspace", () => {
     }, new Date("2026-10-28T22:01:05.000Z"));
     expect(screen.getByText("LIVE")).toBeVisible();
     expect(screen.getByText("01:05")).toBeVisible();
-    expect(screen.getByText("OBS - LikeTACLive")).toHaveClass("recordingPulse");
+    expect(screen.getByText("OBS - NextLevelCastLive")).toHaveClass("recordingPulse");
     expect(screen.getByRole("button", { name: "Test Recording - coming in a later phase" })).toBeDisabled();
-    expect(screen.queryByAltText("Like TAC banner preview")).not.toBeInTheDocument();
-    expect(screen.queryByLabelText("Like TAC opening reel preview")).not.toBeInTheDocument();
+    expect(screen.queryByAltText("Next Level Cast banner preview")).not.toBeInTheDocument();
+    expect(screen.queryByLabelText("Next Level Cast opening reel preview")).not.toBeInTheDocument();
     expect(screen.getByRole("button", { name: "50 - Host Presentation" })).toBeVisible();
     expect(screen.getByRole("button", { name: "Start Live Recording" })).toBeDisabled();
   });

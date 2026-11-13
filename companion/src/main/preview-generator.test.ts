@@ -6,7 +6,7 @@ import { describe, expect, test, vi } from "vitest";
 import { generatePreview } from "./preview-generator";
 
 async function fixtureDirectory() {
-  const directory = join(tmpdir(), `liketac-preview-test-${crypto.randomUUID()}`);
+  const directory = join(tmpdir(), `nextlevelcast-preview-test-${crypto.randomUUID()}`);
   await mkdir(directory, { recursive: true });
   const sourcePath = join(directory, "source.mp4");
   await writeFile(sourcePath, "original-source");

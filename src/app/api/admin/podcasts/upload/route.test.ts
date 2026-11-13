@@ -33,7 +33,7 @@ type UploadCallbacks = {
 };
 
 function request(headers?: HeadersInit) {
-  return new Request("https://liketac.live/api/admin/podcasts/upload", {
+  return new Request("https://nextlevelcast.live/api/admin/podcasts/upload", {
     method: "POST",
     headers: { "content-type": "application/json", ...headers },
     body: JSON.stringify({ type: "blob.generate-client-token", payload: {} }),

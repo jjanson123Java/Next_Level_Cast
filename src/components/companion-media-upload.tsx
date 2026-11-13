@@ -40,7 +40,7 @@ export function CompanionMediaUpload({ episodeId, hasFull, hasPreview, launch = 
       const handoff = await response.json() as HandoffResponse;
       setHandoffId(handoff.id);
       const query = new URLSearchParams({ origin: window.location.origin, episodeId: handoff.episodeId, secret: handoff.secret });
-      launch(`liketac://prepare-upload?${query.toString()}`);
+      launch(`nextlevelcast://prepare-upload?${query.toString()}`);
       setMessage("Handoff ready for 10 minutes. In Companion, choose the completed episode and follow the progress bars.");
     } catch (error) {
       setMessage(error instanceof Error ? error.message : "The secure handoff could not be created.");
@@ -49,5 +49,5 @@ export function CompanionMediaUpload({ episodeId, hasFull, hasPreview, launch = 
     }
   }
 
-  return <section className="stackedForm companionUpload"><div className="buttonRow" aria-label="Media readiness"><span className={`tag ${fullReady ? "ready" : ""}`}>{fullReady ? "Full episode ready" : "Full episode needed"}</span><span className={`tag ${previewReady ? "ready" : ""}`}>{previewReady ? "45-second preview ready" : "Preview needed"}</span></div><p>Select one finished recording. Companion creates the first 45 seconds locally and uploads both private files. RunPod is not used.</p><button className="button primary" type="button" disabled={preparing} onClick={prepare}>{preparing ? "Preparing secure handoff…" : "Prepare and upload with Like TAC Companion"}</button><output aria-live="polite">{message}</output></section>;
+  return <section className="stackedForm companionUpload"><div className="buttonRow" aria-label="Media readiness"><span className={`tag ${fullReady ? "ready" : ""}`}>{fullReady ? "Full episode ready" : "Full episode needed"}</span><span className={`tag ${previewReady ? "ready" : ""}`}>{previewReady ? "45-second preview ready" : "Preview needed"}</span></div><p>Select one finished recording. Companion creates the first 45 seconds locally and uploads both private files. RunPod is not used.</p><button className="button primary" type="button" disabled={preparing} onClick={prepare}>{preparing ? "Preparing secure handoff…" : "Prepare and upload with Next Level Cast Companion"}</button><output aria-live="polite">{message}</output></section>;
 }

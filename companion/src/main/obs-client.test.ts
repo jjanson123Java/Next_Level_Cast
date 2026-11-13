@@ -8,8 +8,8 @@ function transport(overrides: Record<string, unknown> = {}) {
     call: vi.fn(async (request: string) => {
       const responses: Record<string, unknown> = {
         GetVersion: { obsVersion: "33.0.0" },
-        GetProfileList: { currentProfileName: "LikeTACLive" },
-        GetSceneCollectionList: { currentSceneCollectionName: "LikeTACLive Studio" },
+        GetProfileList: { currentProfileName: "NextLevelCastLive" },
+        GetSceneCollectionList: { currentSceneCollectionName: "NextLevelCastLive Studio" },
         GetSceneList: { currentProgramSceneName: "00 - Standby", scenes: [{ sceneName: "70 - Audio Only" }, { sceneName: "00 - Standby" }, { sceneName: "Unknown" }] },
         GetRecordStatus: { outputActive: false },
         GetStreamStatus: { outputActive: false },
@@ -37,13 +37,13 @@ describe("OBSClient", () => {
     await expect(new OBSClient(raw).getProgramPreview()).resolves.toBe("data:image/jpeg;base64,frame");
   });
 
-  test("connects to loopback and returns the actual Like TAC snapshot", async () => {
+  test("connects to loopback and returns the actual Next Level Cast snapshot", async () => {
     const raw = transport();
     const client = new OBSClient(raw);
     await client.connect({ host: "127.0.0.1", port: 4455, password: "secret" });
     expect(raw.connect).toHaveBeenCalledWith("ws://127.0.0.1:4455", "secret", expect.objectContaining({ rpcVersion: 1, eventSubscriptions: expect.any(Number) }));
     await expect(client.getSnapshot()).resolves.toMatchObject({
-      obsVersion: "33.0.0", profile: "LikeTACLive", sceneCollection: "LikeTACLive Studio",
+      obsVersion: "33.0.0", profile: "NextLevelCastLive", sceneCollection: "NextLevelCastLive Studio",
       programScene: "00 - Standby", recording: false, streaming: false,
       availableScenes: ["00 - Standby", "70 - Audio Only"],
     });
@@ -57,12 +57,12 @@ describe("OBSClient", () => {
   test("prevents unapproved scene requests and duplicate recording starts", async () => {
     const raw = transport();
     const client = new OBSClient(raw);
-    await expect(client.setProgramScene("Untrusted Scene")).rejects.toThrow("not an approved Like TAC scene");
+    await expect(client.setProgramScene("Untrusted Scene")).rejects.toThrow("not an approved Next Level Cast scene");
     raw.call.mockImplementation(async (request: string) => request === "GetRecordStatus" ? { outputActive: true } : {});
     await expect(client.startRecord()).rejects.toThrow("already recording");
   });
 
-  test("reports exact readiness for required Like TAC scenes and sources", async () => {
+  test("reports exact readiness for required Next Level Cast scenes and sources", async () => {
     const raw = transport();
     raw.call.mockImplementation(async (request: string, data?: Record<string, unknown>) => {
       if (request === "GetSceneList") return { scenes: [{ sceneName: "00 - Standby" }, { sceneName: "10 - Host Only" }] };
@@ -82,7 +82,7 @@ describe("OBSClient", () => {
     expect(result).toContainEqual({ id: "source:DISPLAY_Presentation", label: "Presentation display", ready: false, reason: "Required OBS source is missing." });
   });
 
-  test("uses the DeskPro source name saved in the LikeTACLive Studio collection", async () => {
+  test("uses the DeskPro source name saved in the NextLevelCastLive Studio collection", async () => {
     const raw = transport();
     raw.call.mockImplementation(async (request: string, data?: Record<string, unknown>) => {
       if (request === "GetSceneList") return { currentProgramSceneName: "00 - Standby", scenes: [{ sceneName: "00 - Standby" }, { sceneName: "50 - Host Presentation" }] };

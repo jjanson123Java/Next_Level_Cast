@@ -8,7 +8,7 @@ describe("OBS launcher", () => {
     expect(buildOBSLaunchSpec(executable)).toEqual({
       executable,
       workingDirectory: "C:\\Program Files\\obs-studio\\bin\\64bit",
-      arguments: ["--profile", "LikeTACLive", "--collection", "LikeTACLive Studio", "--scene", "00 - Standby"],
+      arguments: ["--profile", "NextLevelCastLive", "--collection", "NextLevelCastLive Studio", "--scene", "00 - Standby"],
     });
   });
 
@@ -29,7 +29,7 @@ describe("OBS launcher", () => {
     launcher.launch(executable!);
     expect(spawn).toHaveBeenCalledWith(
       executable,
-      ["--profile", "LikeTACLive", "--collection", "LikeTACLive Studio", "--scene", "00 - Standby"],
+      ["--profile", "NextLevelCastLive", "--collection", "NextLevelCastLive Studio", "--scene", "00 - Standby"],
       { cwd: "C:\\Program Files\\obs-studio\\bin\\64bit", windowsHide: false },
     );
     await expect(launcher.closeLaunched()).resolves.toBe(true);

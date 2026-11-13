@@ -3,7 +3,7 @@ import { describe, expect, test, vi } from "vitest";
 import { MediaUploadJob } from "./media-upload-job";
 
 const launch = {
-  origin: "https://liketac.live",
+  origin: "https://nextlevelcast.live",
   episodeId: "86420552-d588-449f-a5ba-3ecac12bf373",
   secret: "abcdefghijklmnopqrstuvwxyzABCDEFGH123456",
 };
@@ -11,9 +11,9 @@ const launch = {
 function dependencies(overrides: Record<string, unknown> = {}) {
   return {
     selectFile: vi.fn(async () => "C:\\Podcasts\\episode.mp4"),
-    makeTempDirectory: vi.fn(async () => "C:\\Temp\\liketac-upload"),
+    makeTempDirectory: vi.fn(async () => "C:\\Temp\\nextlevelcast-upload"),
     probe: vi.fn(async () => ({ sourcePath: "C:\\Podcasts\\episode.mp4", kind: "video" as const, durationSeconds: 180, hasVideo: true, hasAudio: true, formatName: "mp4" })),
-    generate: vi.fn(async () => ({ outputPath: "C:\\Temp\\liketac-upload\\preview.mp4", kind: "video" as const, durationSeconds: 45, encoder: "nvenc" as const })),
+    generate: vi.fn(async () => ({ outputPath: "C:\\Temp\\nextlevelcast-upload\\preview.mp4", kind: "video" as const, durationSeconds: 45, encoder: "nvenc" as const })),
     upload: vi.fn(async () => undefined),
     cleanup: vi.fn(async () => undefined),
     ...overrides,
@@ -30,10 +30,10 @@ describe("Companion media upload job", () => {
     expect(deps.selectFile).toHaveBeenCalledOnce();
     expect(deps.generate).toHaveBeenCalledWith(expect.objectContaining({ sourcePath: "C:\\Podcasts\\episode.mp4" }));
     expect(deps.upload).toHaveBeenNthCalledWith(1, expect.objectContaining({ role: "video", sourcePath: "C:\\Podcasts\\episode.mp4", secret: launch.secret }));
-    expect(deps.upload).toHaveBeenNthCalledWith(2, expect.objectContaining({ role: "teaser", sourcePath: "C:\\Temp\\liketac-upload\\preview.mp4", secret: launch.secret }));
+    expect(deps.upload).toHaveBeenNthCalledWith(2, expect.objectContaining({ role: "teaser", sourcePath: "C:\\Temp\\nextlevelcast-upload\\preview.mp4", secret: launch.secret }));
     expect(job.publicStatus()).toMatchObject({ phase: "complete", fullProgress: 100, previewProgress: 100 });
     expect(JSON.stringify(updates)).not.toContain(launch.secret);
-    expect(deps.cleanup).toHaveBeenCalledWith("C:\\Temp\\liketac-upload");
+    expect(deps.cleanup).toHaveBeenCalledWith("C:\\Temp\\nextlevelcast-upload");
   });
 
   test("uses an audio full role for audio-only source", async () => {
@@ -54,7 +54,7 @@ describe("Companion media upload job", () => {
     await job.cancel();
     await expect(running).rejects.toThrow("aborted");
     expect(job.publicStatus().phase).toBe("cancelled");
-    expect(deps.cleanup).toHaveBeenCalledWith("C:\\Temp\\liketac-upload");
+    expect(deps.cleanup).toHaveBeenCalledWith("C:\\Temp\\nextlevelcast-upload");
   });
 
   test("retries only the preview after the full upload already completed", async () => {

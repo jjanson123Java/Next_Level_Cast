@@ -1,13 +1,13 @@
-appId: live.liketac.companion
-productName: Like TAC Companion
+appId: live.nextlevelcast.companion
+productName: Next Level Cast Companion
 directories:
   output: release
 files:
   - dist/**/*
 protocols:
-  - name: Like TAC Recording Studio
+  - name: Next Level Cast Recording Studio
     schemes:
-      - liketac
+      - nextlevelcast
 win:
   target:
     - nsis

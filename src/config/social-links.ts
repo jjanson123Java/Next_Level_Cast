@@ -5,5 +5,5 @@ export type SocialLink = {
 };
 
 // Add only accounts that the site owner has confirmed. Blank entries are not rendered.
-// Like TAC intentionally has no social accounts configured yet.
+// Next Level Cast intentionally has no social accounts configured yet.
 export const socialLinks: SocialLink[] = [];

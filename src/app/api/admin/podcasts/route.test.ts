@@ -23,7 +23,7 @@ function moveRequest(categoryId = "22222222-2222-4222-8222-222222222222") {
   form.set("action", "move");
   form.set("id", "11111111-1111-4111-8111-111111111111");
   form.set("categoryId", categoryId);
-  return new Request("https://liketac.live/api/admin/podcasts", { method: "POST", body: form });
+  return new Request("https://nextlevelcast.live/api/admin/podcasts", { method: "POST", body: form });
 }
 
 function classificationRequest(action: "create" | "classify" | "organize", selected: string[]) {
@@ -34,7 +34,7 @@ function classificationRequest(action: "create" | "classify" | "organize", selec
   form.set("categoryId", "22222222-2222-4222-8222-222222222222");
   form.set("summary", "Useful ideas.");
   for (const name of selected) form.set(name, "yes");
-  return new Request("https://liketac.live/api/admin/podcasts", { method: "POST", body: form });
+  return new Request("https://nextlevelcast.live/api/admin/podcasts", { method: "POST", body: form });
 }
 
 describe("moving an existing podcast episode", () => {

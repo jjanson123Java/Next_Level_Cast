@@ -20,10 +20,10 @@ describe("role-aware Help", () => {
   it("shows podcast, category, subscriber, Vercel, and security guidance to admins", async () => {
     getSession.mockResolvedValue({ role: "admin" });
     render(await HelpPage());
-    expect(screen.getByRole("heading", { name: "Manage Like TAC with confidence." })).toBeInTheDocument();
-    expect(screen.getByText(/Vercel does not directly manage Like TAC subscribers/)).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Manage Next Level Cast with confidence." })).toBeInTheDocument();
+    expect(screen.getByText(/Vercel does not directly manage Next Level Cast subscribers/)).toBeInTheDocument();
     expect(screen.getByText(/Coming Soon/)).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: "Like TAC Companion" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Next Level Cast Companion" })).toBeInTheDocument();
     expect(screen.getByText(/127\.0\.0\.1:4455/)).toBeInTheDocument();
   });
 });

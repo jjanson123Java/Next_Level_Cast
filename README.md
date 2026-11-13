@@ -1,22 +1,12 @@
-# Like TAC Podcast Portal
+# Next Level Cast Podcast Portal
 
-Production Next.js portal for [liketac.live](https://liketac.live): relaxed, plain-language technical podcasts for beginners and experienced listeners learning a new technology.
+Production Next.js portal for [nextlevelcast.live](https://nextlevelcast.live): a relaxed gaming podcast for every genre, platform, and player archetype.
 
-## Podcast opening reel
+## Brand media
 
-The approved seven-second Like TAC opener and all editable components live in
-`public/media/podcast-opener/`. The bundle contains the composed MP4, a visual-only MP4, the original
-WAV soundtrack, the closing Like TAC visual, provenance documentation, and regeneration instructions.
-
-Regenerate the reel after editing `scripts/create-podcast-opener.mjs` or replacing a component:
-
-```powershell
-node scripts/create-podcast-opener.mjs
-```
-
-The Browse Shows page uses the composed reel wherever a subject or listed episode is waiting for its
-finished recording. Replace that placeholder with the finished `intro + podcast + credits` media when
-the episode is published.
+Next Level Cast artwork lives in `public/brand/`; the one-time member welcome audio is stored at
+`public/media/level-completed-welcome.mp3`. Empty categories and episodes without uploaded media use
+branded still artwork rather than inherited Like TAC media.
 
 Catalog previews have no native player controls. They begin muted and cycle through the 7-second opener,
 a 3-second excerpt at `0:17`, and a 3-second excerpt at `0:27`. After that single cycle, the preview
@@ -42,7 +32,7 @@ media controls.
 Add only confirmed accounts to `src/config/social-links.ts`. Supported services are YouTube, Twitch,
 X / Twitter, Instagram, and Discord. Each entry needs an HTTPS URL and display label. Blank or unsafe
 entries are omitted. The links sit beside the footer brand, wrap when needed, and stack below the brand
-on small screens. Like TAC keeps this list empty until its own accounts are ready to publish.
+on small screens. Next Level Cast keeps this list empty until its own accounts are ready to publish.
 
 ## Local verification
 

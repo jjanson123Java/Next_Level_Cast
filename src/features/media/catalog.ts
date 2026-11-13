@@ -8,9 +8,7 @@ export async function getCatalog() {
   const db = createContentDb();
   const categoryRows = await db.select().from(categories).where(isNull(categories.deletedAt)).orderBy(asc(categories.sortOrder), asc(categories.name));
   const episodeRows = await db.select().from(episodes).where(and(eq(episodes.status, "published"), isNull(episodes.deletedAt))).orderBy(desc(episodes.publishedAt));
-  const mediaRows = episodeRows.length
-    ? await db.select({ id: mediaVariants.id, episodeId: mediaVariants.episodeId, kind: mediaVariants.kind, mimeType: mediaVariants.mimeType, createdAt: mediaVariants.createdAt }).from(mediaVariants).where(and(inArray(mediaVariants.episodeId, episodeRows.map((episode) => episode.id)), inArray(mediaVariants.kind, ["audio", "video", "teaser"]), isNull(mediaVariants.deletedAt)))
-    : [];
+  const mediaRows = episodeRows.length ? await db.select({ id: mediaVariants.id, episodeId: mediaVariants.episodeId, kind: mediaVariants.kind, mimeType: mediaVariants.mimeType, createdAt: mediaVariants.createdAt }).from(mediaVariants).where(and(inArray(mediaVariants.episodeId, episodeRows.map((episode) => episode.id)), inArray(mediaVariants.kind, ["audio", "video", "teaser"]), isNull(mediaVariants.deletedAt))) : [];
   const episodeIdsWithMedia = new Set(mediaRows.map((media) => media.episodeId));
   const episodeIdsWithFullMedia = new Set(mediaRows.filter((media) => media.kind === "audio" || media.kind === "video").map((media) => media.episodeId));
   const previewRows = mediaRows.filter((media): media is typeof media & { kind: "audio" | "video" | "teaser" } => media.kind === "audio" || media.kind === "video" || media.kind === "teaser");
@@ -19,9 +17,24 @@ export async function getCatalog() {
 
 export async function getEpisodeBySlug(slug: string) {
   if (!process.env.CONTENT_DATABASE_URL) { for (const category of sampleCatalog) { const episode = category.episodes.find((item) => item.slug === slug); if (episode) return { episode, category, media: [] }; } return null; }
-  const db = createContentDb(); const [episode] = await db.select().from(episodes).where(and(eq(episodes.slug, slug), eq(episodes.status, "published"), isNull(episodes.deletedAt))).limit(1); if (!episode) return null;
-  const [category] = await db.select().from(categories).where(eq(categories.id, episode.categoryId)).limit(1); const media = await db.select().from(mediaVariants).where(and(eq(mediaVariants.episodeId, episode.id), isNull(mediaVariants.deletedAt))).orderBy(desc(mediaVariants.createdAt)); return { episode, category, media };
+  const db = createContentDb();
+  const [episode] = await db.select().from(episodes).where(and(eq(episodes.slug, slug), eq(episodes.status, "published"), isNull(episodes.deletedAt))).limit(1);
+  if (!episode) return null;
+  const [category] = await db.select().from(categories).where(eq(categories.id, episode.categoryId)).limit(1);
+  const media = await db.select().from(mediaVariants).where(and(eq(mediaVariants.episodeId, episode.id), isNull(mediaVariants.deletedAt))).orderBy(desc(mediaVariants.createdAt));
+  return { episode, category, media };
 }
 
 const now = new Date();
-const sampleCatalog = [{ id: "sample-category-1", name: "AI without the headache", slug: "ai-without-the-headache", description: "Useful AI ideas explained in plain language.", sortOrder: 1, createdAt: now, updatedAt: now, deletedAt: null, episodes: [{ id: "sample-episode-1", categoryId: "sample-category-1", title: "AI: useful coworker or confident liar?", slug: "ai-useful-coworker", summary: "A lively, practical conversation about where AI helps—and where it absolutely does not.", status: "published" as const, accessLevel: "subscriber" as const, isStartHere: false, isCurrent: true, isFreeClassification: false, isNonTechnical: false, isBeginner: true, isSeriously: true, hasMedia: false, previewMediaId: null, previewMediaKind: "video" as const, publishedAt: new Date("2026-10-27T12:00:00Z"), createdAt: now, updatedAt: now, deletedAt: null }, { id: "sample-episode-2", categoryId: "sample-category-1", title: "Tech explained like you’re at lunch", slug: "tech-at-lunch", summary: "Plain language, real examples, and no shame in asking the obvious question.", status: "published" as const, accessLevel: "public" as const, isStartHere: true, isCurrent: false, isFreeClassification: true, isNonTechnical: true, isBeginner: false, isSeriously: false, hasMedia: false, previewMediaId: null, previewMediaKind: "video" as const, publishedAt: new Date("2026-10-20T12:00:00Z"), createdAt: now, updatedAt: now, deletedAt: null }] }, { id: "sample-category-2", name: "Deploying and Configuring Expressway", slug: "expressway", description: "Practical Expressway deployment and configuration conversations.", sortOrder: 2, createdAt: now, updatedAt: now, deletedAt: null, episodes: [] }];
+const episode = (values: Partial<Record<string, unknown>> & { id: string; categoryId: string; title: string; slug: string; summary: string; publishedAt: Date }) => ({
+  status: "published" as const, accessLevel: "subscriber" as const, isStartHere: false, isCurrent: false,
+  isFreeClassification: false, isNonTechnical: false, isBeginner: false, isSeriously: false,
+  hasMedia: true, previewMediaId: null, previewMediaKind: "video" as const,
+  createdAt: now, updatedAt: now, deletedAt: null, ...values,
+});
+const sampleCatalog = [
+  { id: "start-category", name: "Start Here", slug: "start-here", description: "The permanent free welcome to Next Level Cast.", sortOrder: 0, createdAt: now, updatedAt: now, deletedAt: null, episodes: [episode({ id: "leveled-up", categoryId: "start-category", title: "Leveled Up", slug: "leveled-up", summary: "Your chill weekly gaming digest, brought to you by Next Level Cast.", accessLevel: "public", isStartHere: true, isCurrent: true, isFreeClassification: true, publishedAt: new Date("2026-11-01T12:00:00Z") })] },
+  { id: "backlog", name: "The Backlog, Reviews & What We’re Playing", slug: "backlog-reviews-what-were-playing", description: "Honest impressions and what is actually worth playing.", sortOrder: 10, createdAt: now, updatedAt: now, deletedAt: null, episodes: [] },
+  { id: "culture", name: "Gaming Culture, News & Hot Takes", slug: "gaming-culture-news-hot-takes", description: "Industry shifts, patch notes, nostalgia, and the debates shaping gaming.", sortOrder: 20, createdAt: now, updatedAt: now, deletedAt: null, episodes: [episode({ id: "retro", categoryId: "culture", title: "Retro Revival", slug: "retro-revival", summary: "Why the tight loops and unforgettable design of arcade classics still shape modern games.", publishedAt: new Date("2026-11-08T12:00:00Z") })] },
+  { id: "lifestyle", name: "Gamer Lifestyle, Co-Op & Community", slug: "gamer-lifestyle-co-op-community", description: "The social side of gaming, setup talk, and balancing real life with late-night sessions.", sortOrder: 30, createdAt: now, updatedAt: now, deletedAt: null, episodes: [] },
+];

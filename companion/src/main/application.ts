@@ -16,7 +16,7 @@ export class CompanionApplication {
 
   setMediaUploadJob(job: MediaUploadJob) { this.mediaUploadJob = job; }
   mediaUploadStatus() { return this.mediaUploadJob?.publicStatus() ?? null; }
-  startMediaUpload() { if (!this.mediaUploadJob) throw new Error("Open the upload from the Like TAC administrator dashboard first."); return this.mediaUploadJob.start(); }
+  startMediaUpload() { if (!this.mediaUploadJob) throw new Error("Open the upload from the Next Level Cast administrator dashboard first."); return this.mediaUploadJob.start(); }
   retryMediaUpload() { if (!this.mediaUploadJob) throw new Error("No episode upload is ready to retry."); return this.mediaUploadJob.retry(); }
   cancelMediaUpload() { if (!this.mediaUploadJob) throw new Error("No episode upload is active."); return this.mediaUploadJob.cancel(); }
 

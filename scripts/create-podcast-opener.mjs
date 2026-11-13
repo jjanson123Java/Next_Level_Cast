@@ -10,7 +10,7 @@ const visualDir = join(outputDir, "visual");
 const audioPath = join(audioDir, "like-tac-podcast-opener-original.wav");
 const videoPath = join(outputDir, "like-tac-podcast-opener.mp4");
 const visualVideoPath = join(visualDir, "like-tac-podcast-opener-visual-only.mp4");
-const bannerPath = join(visualDir, "liketac-banner-hd.png");
+const bannerPath = join(visualDir, "nextlevelcast-banner-hd.png");
 const fontPath = "C\\:/Windows/Fonts/segoeuib.ttf";
 
 mkdirSync(outputDir, { recursive: true });

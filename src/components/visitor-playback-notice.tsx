@@ -12,7 +12,7 @@ export function VisitorPlaybackNotice({ episodeTitle, onClose, open }: { episode
     <section aria-label={`${episodeTitle} requires membership`} aria-modal="true" className="visitorNotice" onKeyDown={(event) => { if (event.key === "Escape") onClose(); }} role="dialog">
       <span className="eyebrow">Subscriber episode</span>
       <h2>You’re browsing as a visitor.</h2>
-      <p><strong>{episodeTitle}</strong> is visible in the catalog, but full playback is available to Like TAC members. Membership is free.</p>
+      <p><strong>{episodeTitle}</strong> is visible in the catalog, but full playback is available to Next Level Cast members. Membership is free.</p>
       <div className="buttonRow"><Link className="button primary" href="/signup">Sign Up Free</Link><button className="button outline" onClick={onClose} ref={closeRef} type="button">Keep Browsing</button></div>
     </section>
   </div>;

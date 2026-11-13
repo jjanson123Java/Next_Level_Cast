@@ -2,7 +2,7 @@ import { expect, test } from "@playwright/test";
 
 test("subscriber signup, sign in, and recovery pages expose the required controls", async ({ page }) => {
   await page.goto("/signup");
-  await expect(page.getByRole("heading", { name: "Subscribe to Like TAC" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Subscribe to Next Level Cast" })).toBeVisible();
   await expect(page.getByLabel("First name")).toBeVisible();
   await expect(page.getByLabel("Pronouns (optional)")).toBeVisible();
   await expect(page.getByLabel(/I approve receiving/)).toBeVisible();

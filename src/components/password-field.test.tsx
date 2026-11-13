@@ -8,15 +8,15 @@ describe("PasswordField", () => {
     render(<PasswordField label="Password" name="password" />);
     const input = screen.getByLabelText("Password");
 
-    fireEvent.change(input, { target: { value: "LikeTAC!2026" } });
+    fireEvent.change(input, { target: { value: "NextLevelCast!2026" } });
     fireEvent.click(screen.getByRole("button", { name: "Show password" }));
 
     expect(input).toHaveAttribute("type", "text");
-    expect(input).toHaveValue("LikeTAC!2026");
+    expect(input).toHaveValue("NextLevelCast!2026");
 
     fireEvent.click(screen.getByRole("button", { name: "Hide password" }));
 
     expect(input).toHaveAttribute("type", "password");
-    expect(input).toHaveValue("LikeTAC!2026");
+    expect(input).toHaveValue("NextLevelCast!2026");
   });
 });

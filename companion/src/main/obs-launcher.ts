@@ -7,7 +7,7 @@ export function buildOBSLaunchSpec(executable: string): OBSLaunchSpec {
   return {
     executable,
     workingDirectory: win32.dirname(executable),
-    arguments: ["--profile", "LikeTACLive", "--collection", "LikeTACLive Studio", "--scene", "00 - Standby"],
+    arguments: ["--profile", "NextLevelCastLive", "--collection", "NextLevelCastLive Studio", "--scene", "00 - Standby"],
   };
 }
 

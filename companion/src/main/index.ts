@@ -34,10 +34,10 @@ function installUploadJob(launch: UploadLaunch) {
   const job = new MediaUploadJob(launch, {
     selectFile: async () => {
       if (!mainWindow) return null;
-      const result = await dialog.showOpenDialog(mainWindow, { title: "Choose the completed Like TAC episode", properties: ["openFile"], filters: [{ name: "Podcast media", extensions: ["mp4", "webm", "mp3", "m4a", "wav"] }] });
+      const result = await dialog.showOpenDialog(mainWindow, { title: "Choose the completed Next Level Cast episode", properties: ["openFile"], filters: [{ name: "Podcast media", extensions: ["mp4", "webm", "mp3", "m4a", "wav"] }] });
       return result.canceled ? null : result.filePaths[0] ?? null;
     },
-    makeTempDirectory: () => mkdtemp(join(tmpdir(), "liketac-preview-")),
+    makeTempDirectory: () => mkdtemp(join(tmpdir(), "nextlevelcast-preview-")),
     probe: (sourcePath) => probeMedia(sourcePath),
     generate: (input) => generatePreview(input),
     upload: async ({ origin, episodeId, secret, role, attemptId, sourcePath, originalFilename, signal, onProgress }) => {
@@ -104,7 +104,7 @@ function createWindow() {
   const rendererUrl = pathToFileURL(rendererPath).toString();
   const window = new BrowserWindow({
     width: 1440, height: 900, minWidth: 1024, minHeight: 700,
-    backgroundColor: "#063c45", title: "Like TAC Companion",
+    backgroundColor: "#063c45", title: "Next Level Cast Companion",
     webPreferences: {
       preload: join(__dirname, "../preload/index.cjs"), contextIsolation: true,
       sandbox: true, nodeIntegration: false,
@@ -145,7 +145,7 @@ function createWindow() {
 
 if (!app.requestSingleInstanceLock()) app.quit();
 else {
-  app.setAsDefaultProtocolClient("liketac");
+  app.setAsDefaultProtocolClient("nextlevelcast");
   app.on("second-instance", (_event, argv) => {
     const uploadLaunch = argv.map(parseRuntimeUploadLaunch).find(Boolean);
     if (!uploadLaunch && !argv.some((value) => parseCompanionLaunch(value) === "recording")) return;
@@ -155,7 +155,7 @@ else {
     if (uploadLaunch && service) installUploadJob(uploadLaunch);
   });
   void app.whenReady().then(() => {
-    const protocolArguments = process.argv.filter((value) => value.toLowerCase().startsWith("liketac:"));
+    const protocolArguments = process.argv.filter((value) => value.toLowerCase().startsWith("nextlevelcast:"));
     if (protocolArguments.length && !protocolArguments.some((value) => parseCompanionLaunch(value) === "recording" || parseRuntimeUploadLaunch(value))) {
       app.quit();
       return;
@@ -171,7 +171,7 @@ else {
       return stdout;
     });
     const assetChecks = [
-      ["liketac-banner-hd.png", "Like TAC banner", "ed5a5c0a58b0cb05e17f3df9285ae2681cd995274ab62259bb4e46200731e420"],
+      ["nextlevelcast-banner-hd.png", "Next Level Cast banner", "ed5a5c0a58b0cb05e17f3df9285ae2681cd995274ab62259bb4e46200731e420"],
       ["like-tac-podcast-opener.mp4", "Opening reel", "48b1cb5343e07d19c7871cce4174487a40b0214fa2c23db1b740ed462e7237d1"],
       ["like-tac-podcast-opener-companion.webm", "Companion-compatible opening reel", "ef1d8a536aabf9796703109b3e2a12e00058810cd504f044aa01026012baa30a"],
       ["like-tac-podcast-opener-visual-only.mp4", "Visual-only opening reel", "5aa916f7ffc4e4618580a5f39e50a5897e736acb687665e8e5ae67875a28f41d"],

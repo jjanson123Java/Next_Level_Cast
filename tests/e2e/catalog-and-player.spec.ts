@@ -28,7 +28,7 @@ test("visitor landing directs to Start Here and protects subscriber episodes", a
   await expect(catalogPreview).not.toHaveAttribute("controls");
   await expect.poll(async () => catalogPreview.evaluate((media: HTMLVideoElement) => media.currentTime > 0.25), { timeout: 5_000 }).toBe(true);
   await expect(catalogPreview).toBeHidden({ timeout: 10_000 });
-  await expect(page.getByAltText("Tech explained like you’re at lunch preview returned to the opening frame")).toHaveAttribute("src", /liketac-banner-hd\.png/);
+  await expect(page.getByAltText("Tech explained like you’re at lunch preview returned to the opening frame")).toHaveAttribute("src", /nextlevelcast-banner-hd\.png/);
 
   const episodeLink = page
     .getByRole("article")
