@@ -6,6 +6,7 @@ import { hashPassword, isRecentlyUsedPassword } from "@/features/auth/password-h
 import { validatePassword } from "@/features/auth/password-policy";
 import { hashOpaqueToken } from "@/features/auth/session";
 import { consumeRateLimit, createRateLimitKey, requestIp } from "@/features/auth/rate-limit";
+import { claimPasswordResetChallenge, PasswordResetClaimError } from "@/features/auth/password-reset-claim";
 
 export async function POST(request: Request) {
   const form = await request.formData();
@@ -20,12 +21,17 @@ export async function POST(request: Request) {
   const history = await db.select({ passwordHash: passwordHistory.passwordHash }).from(passwordHistory).where(eq(passwordHistory.userId, challenge.userId)).orderBy(asc(passwordHistory.position)).limit(5);
   if (await isRecentlyUsedPassword(password, history.map((item) => item.passwordHash))) return NextResponse.json({ error: "That password was used recently. Try another or use the suggested password from your email." }, { status: 409 });
   const passwordHash = await hashPassword(password);
-  await db.transaction(async (tx) => {
-    await tx.delete(passwordHistory).where(eq(passwordHistory.userId, challenge.userId));
-    await tx.insert(passwordHistory).values([{ userId: challenge.userId, passwordHash, position: 1 }, ...history.slice(0, 4).map((item, index) => ({ userId: challenge.userId, passwordHash: item.passwordHash, position: index + 2 }))]);
-    await tx.update(users).set({ passwordHash, mustChangePassword: false, updatedAt: new Date() }).where(eq(users.id, challenge.userId));
-    await tx.update(passwordResetChallenges).set({ usedAt: new Date() }).where(eq(passwordResetChallenges.id, challenge.id));
-    await tx.update(sessions).set({ revokedAt: new Date() }).where(eq(sessions.userId, challenge.userId));
-  });
+  try {
+    await db.transaction(async (tx) => {
+      if (!await claimPasswordResetChallenge(tx, challenge.id, challenge.userId)) throw new PasswordResetClaimError();
+      await tx.delete(passwordHistory).where(eq(passwordHistory.userId, challenge.userId));
+      await tx.insert(passwordHistory).values([{ userId: challenge.userId, passwordHash, position: 1 }, ...history.slice(0, 4).map((item, index) => ({ userId: challenge.userId, passwordHash: item.passwordHash, position: index + 2 }))]);
+      await tx.update(users).set({ passwordHash, mustChangePassword: false, updatedAt: new Date() }).where(eq(users.id, challenge.userId));
+      await tx.update(sessions).set({ revokedAt: new Date() }).where(eq(sessions.userId, challenge.userId));
+    });
+  } catch (error) {
+    if (error instanceof PasswordResetClaimError) return NextResponse.json({ error: "This reset link is invalid or expired. Request a new one." }, { status: 400 });
+    throw error;
+  }
   return NextResponse.redirect(new URL("/sign-in", request.url), 303);
 }

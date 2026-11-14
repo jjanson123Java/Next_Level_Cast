@@ -20,7 +20,8 @@ export async function getEpisodeBySlug(slug: string) {
   const db = createContentDb();
   const [episode] = await db.select().from(episodes).where(and(eq(episodes.slug, slug), eq(episodes.status, "published"), isNull(episodes.deletedAt))).limit(1);
   if (!episode) return null;
-  const [category] = await db.select().from(categories).where(eq(categories.id, episode.categoryId)).limit(1);
+  const [category] = await db.select().from(categories).where(and(eq(categories.id, episode.categoryId), isNull(categories.deletedAt))).limit(1);
+  if (!category || category.deletedAt) return null;
   const media = await db.select().from(mediaVariants).where(and(eq(mediaVariants.episodeId, episode.id), isNull(mediaVariants.deletedAt))).orderBy(desc(mediaVariants.createdAt));
   return { episode, category, media };
 }
