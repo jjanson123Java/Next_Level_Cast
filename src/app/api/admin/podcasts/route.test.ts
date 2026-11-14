@@ -33,7 +33,7 @@ function classificationRequest(action: "create" | "classify" | "organize", selec
   form.set("title", "A classified episode");
   form.set("categoryId", "22222222-2222-4222-8222-222222222222");
   form.set("summary", "Useful ideas.");
-  for (const name of selected) form.set(name, "yes");
+  for (const name of selected) form.append("gamerTypes", name);
   return new Request("https://nextlevelcast.live/api/admin/podcasts", { method: "POST", body: form });
 }
 
@@ -78,7 +78,7 @@ describe("moving an existing podcast episode", () => {
   });
 });
 
-describe("classifying podcast episodes", () => {
+describe("tagging podcast episodes for gamer archetypes", () => {
   beforeEach(() => {
     vi.clearAllMocks();
     requireAdminMock.mockResolvedValue({ userId: "admin-1" });
@@ -88,14 +88,11 @@ describe("classifying podcast episodes", () => {
     const values = vi.fn().mockResolvedValue(undefined);
     db.insert.mockReturnValue({ values });
 
-    const response = await POST(classificationRequest("create", ["isFreeClassification", "isBeginner"]));
+    const response = await POST(classificationRequest("create", ["casual", "mobile"]));
 
     expect(response.status).toBe(303);
     expect(values).toHaveBeenCalledWith(expect.objectContaining({
-      isFreeClassification: true,
-      isNonTechnical: false,
-      isBeginner: true,
-      isSeriously: false,
+      gamerTypes: ["casual", "mobile"],
     }));
   });
 
@@ -104,14 +101,11 @@ describe("classifying podcast episodes", () => {
     const set = vi.fn(() => ({ where }));
     db.update.mockReturnValue({ set });
 
-    const response = await POST(classificationRequest("classify", ["isNonTechnical", "isSeriously"]));
+    const response = await POST(classificationRequest("classify", ["esports", "competitive"]));
 
     expect(response.status).toBe(303);
     expect(set).toHaveBeenCalledWith({
-      isFreeClassification: false,
-      isNonTechnical: true,
-      isBeginner: false,
-      isSeriously: true,
+      gamerTypes: ["esports", "competitive"],
       updatedAt: expect.any(Date),
     });
   });
@@ -124,15 +118,12 @@ describe("classifying podcast episodes", () => {
     const set = vi.fn(() => ({ where }));
     db.update.mockReturnValue({ set });
 
-    const response = await POST(classificationRequest("organize", ["isFreeClassification", "isNonTechnical"]));
+    const response = await POST(classificationRequest("organize", ["social", "explorer"]));
 
     expect(response.status).toBe(303);
     expect(set).toHaveBeenCalledWith({
       categoryId: "22222222-2222-4222-8222-222222222222",
-      isFreeClassification: true,
-      isNonTechnical: true,
-      isBeginner: false,
-      isSeriously: false,
+      gamerTypes: ["explorer", "social"],
       updatedAt: expect.any(Date),
     });
   });

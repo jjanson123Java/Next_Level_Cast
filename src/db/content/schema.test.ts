@@ -6,7 +6,7 @@ import { categories, companionUploadHandoffs, episodes, mediaVariants } from "./
 describe("content database schema", () => {
   it("models categories and publishable episodes without identity foreign keys", () => {
     expect(getTableConfig(categories).columns.map((column) => column.name)).toEqual(
-      expect.arrayContaining(["name", "slug", "sort_order", "deleted_at"]),
+      expect.arrayContaining(["name", "slug", "sort_order", "featured_position", "deleted_at"]),
     );
     expect(getTableConfig(episodes).columns.map((column) => column.name)).toEqual(
       expect.arrayContaining([
@@ -21,21 +21,12 @@ describe("content database schema", () => {
     );
   });
 
-  it("stores four independent episode classifications with safe false defaults", () => {
-    const classificationColumns = getTableConfig(episodes).columns.filter((column) =>
-      ["is_free_classification", "is_non_technical", "is_beginner", "is_seriously"].includes(column.name),
-    );
+  it("stores the selected gamer archetypes as a required array", () => {
+    const gamerTypes = getTableConfig(episodes).columns.find((column) => column.name === "gamer_types");
 
-    expect(classificationColumns.map((column) => column.name)).toEqual([
-      "is_free_classification",
-      "is_non_technical",
-      "is_beginner",
-      "is_seriously",
-    ]);
-    for (const column of classificationColumns) {
-      expect(column.notNull).toBe(true);
-      expect(column.hasDefault).toBe(true);
-    }
+    expect(gamerTypes?.notNull).toBe(true);
+    expect(gamerTypes?.hasDefault).toBe(true);
+    expect(gamerTypes?.getSQLType()).toBe("gamer_type[]");
   });
 
   it("stores only media metadata and object keys", () => {

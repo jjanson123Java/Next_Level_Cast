@@ -34,10 +34,8 @@ export default async function PodcastsPage() {
 }
 
 function ClassificationFields({ episode }: { episode?: typeof episodes.$inferSelect }) {
-  return <fieldset className="classificationFields"><legend>Episode classifications</legend>
-    <label className="checkField"><input type="checkbox" name="isFreeClassification" value="yes" defaultChecked={episode?.isFreeClassification} /> Free</label>
-    <label className="checkField"><input type="checkbox" name="isNonTechnical" value="yes" defaultChecked={episode?.isNonTechnical} /> Non-Technical</label>
-    <label className="checkField"><input type="checkbox" name="isBeginner" value="yes" defaultChecked={episode?.isBeginner} /> Beginner</label>
-    <label className="checkField"><input type="checkbox" name="isSeriously" value="yes" defaultChecked={episode?.isSeriously} /> Seriously</label>
+  const choices = ["casual", "midcore", "hardcore", "esports", "mobile", "explorer", "social", "competitive"] as const;
+  return <fieldset className="classificationFields"><legend>Gamer types</legend>
+    {choices.map((type) => <label className="checkField" key={type}><input type="checkbox" name="gamerTypes" value={type} defaultChecked={episode?.gamerTypes.includes(type)} /> {type[0].toUpperCase() + type.slice(1)}</label>)}
   </fieldset>;
 }

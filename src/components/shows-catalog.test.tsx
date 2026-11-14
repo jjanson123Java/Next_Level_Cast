@@ -11,10 +11,7 @@ const baseEpisode = {
   hasMedia: true,
   previewMediaId: null,
   previewMediaKind: "video" as const,
-  isFreeClassification: false,
-  isNonTechnical: false,
-  isBeginner: false,
-  isSeriously: false,
+  gamerTypes: [] as Array<"casual" | "midcore" | "hardcore" | "esports" | "mobile" | "explorer" | "social" | "competitive">,
 };
 
 const catalog: ShowsCatalogCategory[] = [
@@ -23,27 +20,32 @@ const catalog: ShowsCatalogCategory[] = [
     name: "AI in Plain English",
     description: "AI concepts made useful.",
     episodes: [
-      { ...baseEpisode, id: "brain", slug: "brain", title: "Demystifying the Brain", isFreeClassification: true, isNonTechnical: true },
-      { ...baseEpisode, id: "basics", slug: "basics", title: "Building on the Basics", access: "teaser", isBeginner: true, isSeriously: true },
+      { ...baseEpisode, id: "brain", slug: "brain", title: "Demystifying the Brain", gamerTypes: ["casual", "mobile"] },
+      { ...baseEpisode, id: "basics", slug: "basics", title: "Building on the Basics", access: "teaser", gamerTypes: ["midcore", "explorer"] },
     ],
   },
   {
     id: "expressway",
     name: "Deploying Expressway",
     description: "Deployment conversations.",
-    episodes: [{ ...baseEpisode, id: "deploy", slug: "deploy", title: "Deploy with Confidence", access: "teaser", isSeriously: true }],
+    episodes: [{ ...baseEpisode, id: "deploy", slug: "deploy", title: "Deploy with Confidence", access: "teaser", gamerTypes: ["hardcore", "competitive"] }],
   },
 ];
 
-describe("ShowsCatalog classifications", () => {
-  test("renders the four filters in the approved order and shows everything initially", () => {
+describe("ShowsCatalog gamer filters", () => {
+  test("renders the eight gamer filters in the approved order and shows everything initially", () => {
     render(<ShowsCatalog catalog={catalog} isSubscriber={false} />);
 
-    expect(screen.getAllByRole("button", { name: /Episodes$/ }).map((button) => button.textContent)).toEqual([
-      "Free Episodes",
-      "Non-Technical Episodes",
-      "Beginner Episodes",
-      "Seriously Episodes",
+    const filterGroup = screen.getByRole("group", { name: "Filter episodes by gamer type" });
+    expect(within(filterGroup).getAllByRole("button").map((button) => button.textContent)).toEqual([
+      "Casual",
+      "Midcore",
+      "Hardcore",
+      "Esports",
+      "Mobile",
+      "Explorer",
+      "Social",
+      "Competitive",
     ]);
     expect(screen.getByText("Demystifying the Brain")).toBeVisible();
     expect(screen.getByText("Building on the Basics")).toBeVisible();
@@ -52,27 +54,27 @@ describe("ShowsCatalog classifications", () => {
 
   test("uses OR matching for multiple selected filters and restores all episodes when cleared", () => {
     render(<ShowsCatalog catalog={catalog} isSubscriber={false} />);
-    const free = screen.getByRole("button", { name: "Free Episodes" });
-    const beginner = screen.getByRole("button", { name: "Beginner Episodes" });
+    const casual = screen.getByRole("button", { name: "Casual" });
+    const explorer = screen.getByRole("button", { name: "Explorer" });
 
-    fireEvent.click(free);
-    expect(free).toHaveAttribute("aria-pressed", "true");
+    fireEvent.click(casual);
+    expect(casual).toHaveAttribute("aria-pressed", "true");
     expect(screen.getByText("Demystifying the Brain")).toBeVisible();
     expect(screen.queryByText("Building on the Basics")).not.toBeInTheDocument();
 
-    fireEvent.click(beginner);
+    fireEvent.click(explorer);
     expect(screen.getByText("Demystifying the Brain")).toBeVisible();
     expect(screen.getByText("Building on the Basics")).toBeVisible();
     expect(screen.queryByText("Deploy with Confidence")).not.toBeInTheDocument();
 
-    fireEvent.click(free);
-    fireEvent.click(beginner);
+    fireEvent.click(casual);
+    fireEvent.click(explorer);
     expect(screen.getByText("Deploy with Confidence")).toBeVisible();
   });
 
   test("keeps categories visible and explains when none of their episodes match", () => {
     render(<ShowsCatalog catalog={catalog} isSubscriber={false} />);
-    fireEvent.click(screen.getByRole("button", { name: "Free Episodes" }));
+    fireEvent.click(screen.getByRole("button", { name: "Casual" }));
 
     const expressway = screen.getByRole("heading", { name: "Deploying Expressway" }).closest("section");
     expect(expressway).not.toBeNull();

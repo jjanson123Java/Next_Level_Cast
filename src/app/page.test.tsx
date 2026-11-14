@@ -17,9 +17,9 @@ const episodes = [
 beforeEach(() => {
   getSessionMock.mockResolvedValue(null);
   getCatalogMock.mockResolvedValue([
-    { id: "start-category", name: "Start Here", slug: "start-here", description: "Welcome.", sortOrder: 0, episodes: [episodes[0]] },
-    { id: "culture", name: "Gaming Culture, News & Hot Takes", slug: "gaming-culture-news-hot-takes", description: "Gaming news without toxic shouting.", sortOrder: 20, episodes: [episodes[1]] },
-    { id: "lifestyle", name: "Gamer Lifestyle, Co-Op & Community", slug: "gamer-lifestyle-co-op-community", description: "The social side of gaming.", sortOrder: 30, episodes: [] },
+    { id: "start-category", name: "Start Here", slug: "start-here", description: "Welcome.", sortOrder: 0, featuredPosition: null, episodes: [episodes[0]] },
+    { id: "culture", name: "Gaming Culture, News & Hot Takes", slug: "gaming-culture-news-hot-takes", description: "Gaming news without toxic shouting.", sortOrder: 20, featuredPosition: 1, episodes: [episodes[1]] },
+    { id: "lifestyle", name: "Gamer Lifestyle, Co-Op & Community", slug: "gamer-lifestyle-co-op-community", description: "The social side of gaming.", sortOrder: 30, featuredPosition: 2, episodes: [] },
   ]);
 });
 

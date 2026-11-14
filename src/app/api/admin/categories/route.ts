@@ -12,7 +12,19 @@ export async function POST(request: Request) {
   const form = await request.formData(); const action = String(form.get("action") ?? ""); const db = createContentDb();
   if (action === "create") { const name = String(form.get("name") ?? "").trim(); const slug = slugify(name); if (!name || !slug) return Response.json({ error: "Enter a category name." }, { status: 400 }); try { await db.insert(categories).values({ name, slug, description: String(form.get("description") ?? "").trim(), sortOrder: Number(form.get("sortOrder") ?? 0) }); } catch { return Response.json({ error: "That category already exists." }, { status: 409 }); } }
   else if (action === "reorder") { const sortOrder = Number(form.get("sortOrder")); if (!Number.isInteger(sortOrder) || sortOrder < 0) return Response.json({ error: "Enter a valid display order." }, { status: 400 }); await db.update(categories).set({ sortOrder, updatedAt: new Date() }).where(eq(categories.id, String(form.get("id") ?? ""))); }
-  else if (action === "delete") await db.update(categories).set({ deletedAt: new Date(), updatedAt: new Date() }).where(eq(categories.id, String(form.get("id") ?? "")));
+  else if (action === "feature") {
+    const id = String(form.get("id") ?? "");
+    const rawPosition = String(form.get("featuredPosition") ?? "");
+    const featuredPosition = rawPosition === "" ? null : Number(rawPosition);
+    if (featuredPosition !== null && featuredPosition !== 1 && featuredPosition !== 2) return Response.json({ error: "Choose featured position 1 or 2." }, { status: 400 });
+    const rows = await db.select().from(categories);
+    const category = rows.find((row) => row.id === id && !row.deletedAt);
+    if (!category) return Response.json({ error: "Choose an active category." }, { status: 400 });
+    const conflict = featuredPosition === null ? null : rows.find((row) => row.id !== id && !row.deletedAt && row.featuredPosition === featuredPosition);
+    if (conflict) return Response.json({ error: `Featured position ${featuredPosition} is already in use.` }, { status: 409 });
+    await db.update(categories).set({ featuredPosition, updatedAt: new Date() }).where(eq(categories.id, id));
+  }
+  else if (action === "delete") await db.update(categories).set({ deletedAt: new Date(), featuredPosition: null, updatedAt: new Date() }).where(eq(categories.id, String(form.get("id") ?? "")));
   else if (action === "restore") await db.update(categories).set({ deletedAt: null, updatedAt: new Date() }).where(eq(categories.id, String(form.get("id") ?? "")));
   else return Response.json({ error: "Unsupported category action." }, { status: 400 });
   await recordAudit(createIdentityDb(), { actorUserId: admin.userId, action: `admin.category.${action}`, targetType: "category", targetId: String(form.get("id") ?? "new"), ipAddress: requestIp(request) });

@@ -19,7 +19,7 @@ export function getLandingAction(session: Awaited<ReturnType<typeof getSession>>
 export default async function HomePage() {
   const [session, catalog] = await Promise.all([getSession(), getCatalog()]);
   const primaryAction = getLandingAction(session, catalog);
-  const featured = ["gaming-culture-news-hot-takes", "gamer-lifestyle-co-op-community"].map((slug) => catalog.find((category) => category.slug === slug)).filter((category): category is NonNullable<typeof category> => Boolean(category));
+  const featured = catalog.filter((category) => category.featuredPosition !== null).sort((a, b) => (a.featuredPosition ?? 99) - (b.featuredPosition ?? 99)).slice(0, 2);
   const isSubscriber = session?.role === "subscriber" && session.status === "active";
 
   return <main className="nlcHome">

@@ -3,16 +3,14 @@ import { categories, episodes } from "../src/db/content/schema";
 import { createContentDb } from "../src/db/content/client";
 
 const seeds = [
-  { name: "Start Here", slug: "start-here", description: "Friendly first episodes for anyone new to Next Level Cast.", sortOrder: 0 },
-  { name: "AI without the headache", slug: "ai-without-the-headache", description: "Useful AI ideas explained in plain language.", sortOrder: 10 },
-  { name: "Deploying and Configuring Expressway", slug: "deploying-and-configuring-expressway", description: "Practical Expressway deployment and configuration conversations.", sortOrder: 20 },
-  { name: "Collaboration", slug: "collaboration", description: "People, tools, and workflows that help teams communicate.", sortOrder: 30 },
+  { name: "Start Here", slug: "start-here", description: "The permanent free welcome to Next Level Cast.", sortOrder: 0, featuredPosition: null },
+  { name: "The Backlog, Reviews & What We’re Playing", slug: "backlog-reviews-what-were-playing", description: "Honest impressions, backlog management, and what is actually worth playing.", sortOrder: 10, featuredPosition: null },
+  { name: "Gaming Culture, News & Hot Takes", slug: "gaming-culture-news-hot-takes", description: "Industry shifts, patch notes, nostalgia, and the debates shaping gaming.", sortOrder: 20, featuredPosition: 1 },
+  { name: "Gamer Lifestyle, Co-Op & Community", slug: "gamer-lifestyle-co-op-community", description: "The social side of gaming, setup talk, and balancing real life with late-night sessions.", sortOrder: 30, featuredPosition: 2 },
 ];
 
 const db = createContentDb();
-for (const seed of seeds) await db.insert(categories).values(seed).onConflictDoUpdate({ target: categories.slug, set: { name: seed.name, description: seed.description, sortOrder: seed.sortOrder, updatedAt: new Date(), deletedAt: null } });
+for (const seed of seeds) await db.insert(categories).values(seed).onConflictDoUpdate({ target: categories.slug, set: { name: seed.name, description: seed.description, sortOrder: seed.sortOrder, featuredPosition: seed.featuredPosition, updatedAt: new Date(), deletedAt: null } });
 const [startHere] = await db.select().from(categories).where(eq(categories.slug, "start-here")).limit(1);
-const [ai] = await db.select().from(categories).where(eq(categories.slug, "ai-without-the-headache")).limit(1);
-await db.insert(episodes).values({ categoryId: startHere.id, title: "Tech explained like you’re at lunch", slug: "tech-at-lunch", summary: "Plain language, real examples, and no shame in asking the obvious question.", status: "published", accessLevel: "public", isStartHere: true, publishedAt: new Date("2026-10-20T12:00:00Z") }).onConflictDoUpdate({ target: episodes.slug, set: { categoryId: startHere.id, status: "published", accessLevel: "public", isStartHere: true, deletedAt: null } });
-await db.insert(episodes).values({ categoryId: ai.id, title: "AI: useful coworker or confident liar?", slug: "ai-useful-coworker", summary: "A lively, practical conversation about where AI helps—and where it absolutely does not.", status: "published", accessLevel: "public", isCurrent: true, publishedAt: new Date("2026-10-27T12:00:00Z") }).onConflictDoUpdate({ target: episodes.slug, set: { categoryId: ai.id, status: "published", accessLevel: "public", isCurrent: true, deletedAt: null } });
-console.log(`Seeded ${seeds.length} Next Level Cast categories and 2 free episode listings.`);
+await db.insert(episodes).values({ categoryId: startHere.id, title: "Leveled Up", slug: "leveled-up", summary: "Your chill weekly gaming digest, brought to you by Next Level Cast.", status: "published", accessLevel: "public", isStartHere: true, isCurrent: true, gamerTypes: ["casual", "midcore", "hardcore", "esports", "mobile", "explorer", "social", "competitive"], publishedAt: new Date("2026-11-01T12:00:00Z") }).onConflictDoUpdate({ target: episodes.slug, set: { categoryId: startHere.id, title: "Leveled Up", summary: "Your chill weekly gaming digest, brought to you by Next Level Cast.", status: "published", accessLevel: "public", isStartHere: true, isCurrent: true, gamerTypes: ["casual", "midcore", "hardcore", "esports", "mobile", "explorer", "social", "competitive"], deletedAt: null } });
+console.log(`Seeded ${seeds.length} Next Level Cast categories and the permanent Start Here listing.`);

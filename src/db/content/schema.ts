@@ -1,6 +1,7 @@
 import {
   boolean,
   bigint,
+  check,
   index,
   integer,
   pgEnum,
@@ -10,10 +11,12 @@ import {
   uniqueIndex,
   uuid,
 } from "drizzle-orm/pg-core";
+import { sql } from "drizzle-orm";
 
 export const episodeAccess = pgEnum("episode_access", ["public", "subscriber"]);
 export const episodeStatus = pgEnum("episode_status", ["draft", "published", "unpublished"]);
 export const mediaKind = pgEnum("media_kind", ["audio", "video", "teaser", "captions", "transcript"]);
+export const gamerType = pgEnum("gamer_type", ["casual", "midcore", "hardcore", "esports", "mobile", "explorer", "social", "competitive"]);
 
 export const categories = pgTable("categories", {
   id: uuid("id").defaultRandom().primaryKey(),
@@ -21,10 +24,14 @@ export const categories = pgTable("categories", {
   slug: text("slug").notNull().unique(),
   description: text("description"),
   sortOrder: integer("sort_order").notNull().default(0),
+  featuredPosition: integer("featured_position"),
   createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
   updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
   deletedAt: timestamp("deleted_at", { withTimezone: true }),
-});
+}, (table) => [
+  uniqueIndex("categories_featured_position_idx").on(table.featuredPosition),
+  check("categories_featured_position_check", sql`${table.featuredPosition} is null or ${table.featuredPosition} between 1 and 2`),
+]);
 
 export const episodes = pgTable("episodes", {
   id: uuid("id").defaultRandom().primaryKey(),
@@ -36,10 +43,7 @@ export const episodes = pgTable("episodes", {
   accessLevel: episodeAccess("access_level").notNull().default("subscriber"),
   isStartHere: boolean("is_start_here").notNull().default(false),
   isCurrent: boolean("is_current").notNull().default(false),
-  isFreeClassification: boolean("is_free_classification").notNull().default(false),
-  isNonTechnical: boolean("is_non_technical").notNull().default(false),
-  isBeginner: boolean("is_beginner").notNull().default(false),
-  isSeriously: boolean("is_seriously").notNull().default(false),
+  gamerTypes: gamerType("gamer_types").array().notNull().default(sql`ARRAY[]::gamer_type[]`),
   publishedAt: timestamp("published_at", { withTimezone: true }),
   createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
   updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),

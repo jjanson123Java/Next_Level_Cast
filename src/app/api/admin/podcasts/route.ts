@@ -24,4 +24,8 @@ export async function POST(request: Request) {
   return NextResponse.redirect(new URL("/admin/podcasts", request.url), 303);
 }
 function slugify(value: string) { return value.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0, 70); }
-function episodeClassifications(form: FormData) { return { isFreeClassification: form.get("isFreeClassification") === "yes", isNonTechnical: form.get("isNonTechnical") === "yes", isBeginner: form.get("isBeginner") === "yes", isSeriously: form.get("isSeriously") === "yes" }; }
+const gamerTypes = ["casual", "midcore", "hardcore", "esports", "mobile", "explorer", "social", "competitive"] as const;
+function episodeClassifications(form: FormData) {
+  const selected = new Set(form.getAll("gamerTypes").map(String));
+  return { gamerTypes: gamerTypes.filter((type) => selected.has(type)) };
+}

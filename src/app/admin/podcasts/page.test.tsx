@@ -25,10 +25,7 @@ const episode = {
   status: "draft",
   deletedAt: null,
   createdAt: new Date("2026-11-13T12:46:26Z"),
-  isFreeClassification: true,
-  isNonTechnical: true,
-  isBeginner: false,
-  isSeriously: false,
+  gamerTypes: ["casual", "social"],
 };
 
 describe("administrator episode categories", () => {
@@ -51,7 +48,7 @@ describe("administrator episode categories", () => {
     expect(within(card as HTMLElement).getByRole("option", { name: "AI in Plain English" })).toBeVisible();
     const editor = category.closest("form");
     expect(editor).not.toBeNull();
-    expect(within(editor as HTMLElement).getByRole("checkbox", { name: "Free" })).toBeChecked();
+    expect(within(editor as HTMLElement).getByRole("checkbox", { name: "Casual" })).toBeChecked();
     expect(within(editor as HTMLElement).getByRole("button", { name: "Update category and classifications" })).toBeVisible();
   });
 
@@ -62,12 +59,12 @@ describe("administrator episode categories", () => {
     expect(screen.queryByRole("combobox", { name: "Subject" })).not.toBeInTheDocument();
   });
 
-  test("classifies new episodes with four independent checkboxes", async () => {
+  test("tags new episodes with eight independent gamer-type checkboxes", async () => {
     render(await PodcastsPage());
 
     const createForm = screen.getByRole("button", { name: "Save draft" }).closest("form");
     expect(createForm).not.toBeNull();
-    for (const label of ["Free", "Non-Technical", "Beginner", "Seriously"]) {
+    for (const label of ["Casual", "Midcore", "Hardcore", "Esports", "Mobile", "Explorer", "Social", "Competitive"]) {
       expect(within(createForm as HTMLElement).getByRole("checkbox", { name: label })).not.toBeChecked();
     }
   });
@@ -77,10 +74,10 @@ describe("administrator episode categories", () => {
 
     const card = screen.getByRole("heading", { name: episode.title }).closest("article");
     expect(card).not.toBeNull();
-    expect(within(card as HTMLElement).getByRole("checkbox", { name: "Free" })).toBeChecked();
-    expect(within(card as HTMLElement).getByRole("checkbox", { name: "Non-Technical" })).toBeChecked();
-    expect(within(card as HTMLElement).getByRole("checkbox", { name: "Beginner" })).not.toBeChecked();
-    expect(within(card as HTMLElement).getByRole("checkbox", { name: "Seriously" })).not.toBeChecked();
+    expect(within(card as HTMLElement).getByRole("checkbox", { name: "Casual" })).toBeChecked();
+    expect(within(card as HTMLElement).getByRole("checkbox", { name: "Social" })).toBeChecked();
+    expect(within(card as HTMLElement).getByRole("checkbox", { name: "Midcore" })).not.toBeChecked();
+    expect(within(card as HTMLElement).getByRole("checkbox", { name: "Competitive" })).not.toBeChecked();
     expect(within(card as HTMLElement).getByRole("button", { name: "Update category and classifications" })).toBeVisible();
   });
 });

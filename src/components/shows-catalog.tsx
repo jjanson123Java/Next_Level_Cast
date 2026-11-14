@@ -17,10 +17,7 @@ export type ShowsCatalogEpisode = {
   hasMedia: boolean;
   previewMediaId: string | null;
   previewMediaKind?: "audio" | "video";
-  isFreeClassification: boolean;
-  isNonTechnical: boolean;
-  isBeginner: boolean;
-  isSeriously: boolean;
+  gamerTypes: GamerType[];
 };
 
 export type ShowsCatalogCategory = {
@@ -30,20 +27,22 @@ export type ShowsCatalogCategory = {
   episodes: ShowsCatalogEpisode[];
 };
 
-type FilterKey = "free" | "nonTechnical" | "beginner" | "seriously";
+type GamerType = "casual" | "midcore" | "hardcore" | "esports" | "mobile" | "explorer" | "social" | "competitive";
+type FilterKey = GamerType;
 const filters: { key: FilterKey; label: string }[] = [
-  { key: "free", label: "Free Episodes" },
-  { key: "nonTechnical", label: "Non-Technical Episodes" },
-  { key: "beginner", label: "Beginner Episodes" },
-  { key: "seriously", label: "Seriously Episodes" },
+  { key: "casual", label: "Casual" },
+  { key: "midcore", label: "Midcore" },
+  { key: "hardcore", label: "Hardcore" },
+  { key: "esports", label: "Esports" },
+  { key: "mobile", label: "Mobile" },
+  { key: "explorer", label: "Explorer" },
+  { key: "social", label: "Social" },
+  { key: "competitive", label: "Competitive" },
 ];
 
 function matches(episode: ShowsCatalogEpisode, active: Set<FilterKey>) {
   if (!active.size) return true;
-  return (active.has("free") && episode.isFreeClassification)
-    || (active.has("nonTechnical") && episode.isNonTechnical)
-    || (active.has("beginner") && episode.isBeginner)
-    || (active.has("seriously") && episode.isSeriously);
+  return episode.gamerTypes.some((type) => active.has(type));
 }
 
 export function ShowsCatalog({ catalog, isSubscriber }: { catalog: ShowsCatalogCategory[]; isSubscriber: boolean }) {
@@ -55,7 +54,7 @@ export function ShowsCatalog({ catalog, isSubscriber }: { catalog: ShowsCatalogC
   function closeNotice() { setLockedEpisode(null); requestAnimationFrame(() => returnFocus.current?.focus()); }
 
   return <>
-    <div className="catalogFilters" role="group" aria-label="Filter episodes by learning level">
+    <div className="catalogFilters" role="group" aria-label="Filter episodes by gamer type">
       {filters.map(({ key, label }) => <button className="catalogFilter" aria-pressed={active.has(key)} key={key} onClick={() => toggle(key)} type="button">{label}</button>)}
     </div>
     {catalog.map((category) => {
