@@ -5,10 +5,10 @@
 - GitHub: `jjanson123Java/Next_Level_Cast`
 - Vercel team/project: `like-tac/next-level-cast`
 - Vercel project ID: `prj_fsHPTWrQ5W86AMDvcyp0G3dad25J`
-- Identity Neon resource: **not yet provisioned** (must be a new Next Level Cast-only resource)
-- Content Neon resource: **not yet provisioned** (must be a second new Next Level Cast-only resource)
+- Identity Neon resource: `neon-coral-arrow` (`store_X6GV8ez5aYBh7lWN`), assigned exclusively to `IDENTITY_DATABASE_URL`
+- Content Neon resource: `next-level-cast-content` (`store_j24otI2XHBHfiBoC`), connected with the `CONTENT_` environment prefix
 - Private Blob store: `next-level-cast-media` (`store_phoowsqMnIw4C6oo`)
-- Transactional email resource: **not yet provisioned** (must be Next Level Cast-only)
+- Transactional email resource: `next-level-cast-email` (`ir_i4Sw9Q7EsFVl4I8v`) for `nextlevelcast.live`
 - Canonical domain: `nextlevelcast.live`; `www.nextlevelcast.live` redirects to the canonical host
 
 Only resource names and IDs belong in source control. Secrets remain in Vercel environment variables. Never substitute a Like TAC database, Blob store, email resource, or project.
