@@ -23,7 +23,7 @@ describe("protected Next Level Cast Companion launcher", () => {
     expect(screen.getByText(/Scene collection: NextLevelCastLive Studio/)).toBeVisible();
     expect(screen.getByText(/starts OBS when it is not running/i)).toBeVisible();
     expect(screen.getByText(/never sent to Vercel/i)).toBeVisible();
-    expect(screen.getByText(/nextlevelcast-banner-hd.png/)).toBeVisible();
-    expect(screen.getByText(/like-tac-podcast-opener.mp4/)).toBeVisible();
+    expect(screen.getByText(/next-level-cast-cover.png/)).toBeVisible();
+    expect(screen.getByText(/level-completed-welcome.mp3/)).toBeVisible();
   });
 });

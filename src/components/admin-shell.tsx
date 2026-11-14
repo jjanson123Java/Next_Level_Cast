@@ -14,7 +14,7 @@ export function AdminShell({ current, children }: { current: string; children: R
     <div className="adminWorkspace">
       <aside className="adminSidebar">
         <Link href="/admin" className="studioBrand" aria-label="Next Level Cast administration home">
-          <span>LIKE TAC<span className="brandSlash">/</span></span>
+          <span>NEXT LEVEL CAST<span className="brandSlash">/</span></span>
           <small>THE CONTROL ROOM</small>
         </Link>
         <p className="sidebarLabel">Your workspace</p>
@@ -26,13 +26,13 @@ export function AdminShell({ current, children }: { current: string; children: R
           ))}
         </nav>
         <div className="sidebarFooter">
-          <p>Serious tech.<br /><strong>For the rest of us.</strong></p>
+          <p>Welcome to the lobby.<br /><strong>Level completed.</strong></p>
           <Link href="/shows">View public shows <span aria-hidden="true">↗</span></Link>
           <Link href="/help">Help &amp; guidance <span aria-hidden="true">↗</span></Link>
         </div>
       </aside>
       <div className="adminContent">
-        <div className="workspaceBar"><span>LIKE TAC <span aria-hidden="true">/</span> ADMINISTRATION</span><Link href="/">Visit website <span aria-hidden="true">↗</span></Link></div>
+        <div className="workspaceBar"><span>NEXT LEVEL CAST <span aria-hidden="true">/</span> ADMINISTRATION</span><Link href="/">Visit website <span aria-hidden="true">↗</span></Link></div>
         {children}
       </div>
     </div>
